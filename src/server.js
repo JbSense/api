@@ -1,7 +1,6 @@
 import express from 'express'
 import Controller from './services/Controller.js'
 import database from './services/Database.js'
-import Response from './services/Response.js'
 
 const app = express()
 
@@ -20,14 +19,12 @@ app.get('/', async (req, res) => {
   const resultController = new Controller(controller, method, params)
 
   try {
-    const response = new Response(await resultController.callMethod())
     res.status(200).json({
-      response: response.sucessResponse()
+      response: await resultController.callMethod()
     })
   } catch (error) {
-    const response = new Response(error.message)
     res.status(400).json({
-      response: response.badResponse()
+      response: await resultController.callMethod()
     })
   }
 })

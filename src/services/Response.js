@@ -1,21 +1,33 @@
 class Response {
-  constructor (controllerResponse) {
-    this.controllerResponse = controllerResponse
+  constructor (status, message) {
+    this.status = status
+    this.message = message
+    this.data = null
+    this.error = null
   }
 
-  badResponse () {
-    return {
-      status: 400,
-      message: 'Bad request',
-      error: this.controllerResponse
-    }
+  setStatus (status) {
+    this.status = status
   }
 
-  sucessResponse () {
+  setMessage (message) {
+    this.message = message
+  }
+
+  setData (data) {
+    this.data = data
+  }
+
+  setError (error) {
+    this.error = error
+  }
+
+  buildResponse () {
     return {
-      status: 200,
-      message: 'Success',
-      data: this.controllerResponse
+      status: this.status,
+      message: this.message,
+      data: this.data,
+      error: this.error
     }
   }
 }

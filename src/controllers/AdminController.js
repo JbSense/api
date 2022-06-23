@@ -1,18 +1,17 @@
 import Admin from '../models/Admin.js'
 
 class AdminController {
-  async getAdmin (admin) {
-    const email = admin.email
-    const password = admin.password
+  async getAdmin (data) {
+    const idAdmin = data.id_admin
+    const admin = await Admin.findOne({ where: { id_admin: idAdmin } })
 
-    const adm = await Admin.findOne({ where: { email } })
-
-    if (adm.password === password) {
-      return adm
-    } else {
+    if (admin !== null) {
       return {
-        error: 'Incorrect password'
+        message: 'Ok',
+        data: admin
       }
+    } else {
+      return { message: 'Usuário não encontrado' }
     }
   }
 
@@ -29,11 +28,11 @@ class AdminController {
         password,
         id_status_admin: data.id_status_admin
       })
-    } else {
-      return {
-        error: 'Conta já existentente'
-      }
+
+      return { message: 'Administrador criado com sucesso' }
     }
+
+    return { message: 'Conta já existentente' }
   }
 }
 

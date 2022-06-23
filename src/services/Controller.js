@@ -1,4 +1,5 @@
 /* eslint-disable no-eval */
+import Response from './Response.js'
 
 // Import controllers
 import AdminController from '../controllers/AdminController.js'
@@ -15,11 +16,26 @@ class Controller {
     }
   }
 
+  async makeCall (call) {
+    try {
+      const callResponse = await eval(call)
+      const response = new Response(200, callResponse.message)
+
+      if (typeof callResponse.data !== 'undefined') response.setData(callResponse.data)
+
+      return response.buildResponse()
+    } catch (error) {
+      return new Response(400, error.message).buildResponse()
+    }
+  }
+
   async callMethod () {
     if (this.params !== '{}') {
-      return await eval(`this.controllers[this.controller].${this.method}(${this.params})`)
+      const call = `this.controllers[this.controller].${this.method}(${this.params})`
+      return this.makeCall(call)
     } else {
-      return await eval(`this.controllers[this.controller].${this.method}()`)
+      const call = `this.controllers[this.controller].${this.method}()`
+      return this.makeCall(call)
     }
   }
 }
